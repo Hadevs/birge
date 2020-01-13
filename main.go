@@ -26,8 +26,7 @@ func main() {
   // here are buttons defined
   backBtn := tb.InlineButton{
     Unique: "back",
-    Text:   "↩️ Назад"
-  }
+    Text:   "↩️ Назад"}
 
   enterBtn := tb.InlineButton{
     Unique: "enter",
