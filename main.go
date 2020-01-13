@@ -1,37 +1,33 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
-	"github.com/go-telegram-bot-api/telegram-bot-api"
+    "os"
+    tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("954021384:AAHAvlODDOYzbb8Iz6Th1EoE-grU4c3oh90")
-	if err != nil {
-		log.Fatal(err)
-	}
+  var (
+    port      = os.Getenv("PORT")       // sets automatically
+    publicURL = os.Getenv("PUBLIC_URL") // you must add it to your config vars
+    token     = os.Getenv("TOKEN")      // you must add it to your config vars
+  )
 
-	bot.Debug = true
+  webhook := &tb.Webhook{
+    Listen:   ":" + port,
+    Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
+  }
 
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+  pref := tb.Settings{
+    Token:  token,
+    Poller: webhook,
+  }
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://www.google.com:8443/"+bot.Token, "cert.pem"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	info, err := bot.GetWebhookInfo()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if info.LastErrorDate != 0 {
-		log.Printf("Telegram callback failed: %s", info.LastErrorMessage)
-	}
-	updates := bot.ListenForWebhook("/" + bot.Token)
-	go http.ListenAndServeTLS("0.0.0.0:8443", "cert.pem", "key.pem", nil)
+  b, err := tb.NewBot(pref)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	for update := range updates {
-		log.Printf("%+v\n", update)
-	}
+  b.Handle("/hello", func(m *tb.Message) {
+    b.Send(m.Sender, "Hi!")
+  })
 }
