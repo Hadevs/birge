@@ -167,6 +167,7 @@ Swift Exchange - приватная биржа для доверенных ра�
           c.Sender,
           "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
           &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
+        break
       default:
         client.Send("SET", c.Sender.ID, "start")
         defer client.Receive()
