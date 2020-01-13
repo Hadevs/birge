@@ -30,68 +30,55 @@ func main() {
 
   enterBtn := tb.InlineButton{
     Unique: "enter",
-    Text:   "🔑 Войти на биржу",
-  }
+    Text:   "🔑 Войти на биржу"}
 
   qualifyBtn := tb.InlineButton{
     Unique: "qualify",
-    Text:   "🧧 Подать заявку",
-  }
+    Text:   "🧧 Подать заявку"}
 
   infoBtn := tb.InlineButton{
     Unique: "info",
-    Text:   "📃 Информация о бирже"
-  }
+    Text:   "📃 Информация о бирже"}
 
   howToEnterBtn := tb.InlineButton{
     Unique: "howToEnter",
-    Text:   "🗝 Как попасть на биржу?"
-  }
+    Text:   "🗝 Как попасть на биржу?"}
 
   fuckedUpBtn := tb.InlineButton{
     Unique: "fuckedUp",
-    Text:   "📆 Что будет, если я не уложусь в срок?"
-  }
+    Text:   "📆 Что будет, если я не уложусь в срок?"}
 
   whatProjectsBtn := tb.InlineButton{
     Unique: "whatProjects",
-    Text:   "📑 Какие проекты предоставляет биржа?"
-  }
+    Text:   "📑 Какие проекты предоставляет биржа?"}
 
   currentProjectBtn := tb.InlineButton{
     Unique: "currentProject",
-    Text:   "🛎 Мой текущий проект"
-  }
+    Text:   "🛎 Мой текущий проект"}
 
   showOffersBtn := tb.InlineButton{
     Unique: "showOffers",
-    Text:   "📜 Посмотреть текущие предложения"
-  }
+    Text:   "📜 Посмотреть текущие предложения"}
 
   askAdminBtn := tb.InlineButton{
     Unique: "askAdmin",
-    Text:   "💡 Вопрос администрации"
-  }
+    Text:   "💡 Вопрос администрации"}
 
   techSuppBtn := tb.InlineButton{
     Unique: "techSupp",
-    Text:   "📦 Получить техническую помощь"
-  }
+    Text:   "📦 Получить техническую помощь"}
 
   redeemMilestoneProjectBtn := tb.InlineButton{
     Unique: "redeemMilestoneProject",
-    Text:   "✅ Закрыть этап/проект"
-  }
+    Text:   "✅ Закрыть этап/проект"}
 
   cancelProjectBtn := tb.InlineButton{
     Unique: "cancelProject",
-    Text:   "❌ Отказаться от проекта"
-  }
+    Text:   "❌ Отказаться от проекта"}
 
   takeProjectBtn := tb.InlineButton{
     Unique: "takeProject",
-    Text:   "❇️ Принять проект #1"
-  }
+    Text:   "❇️ Принять проект #1"}
 
 	b, err := tb.NewBot(pref)
 	if err != nil {
