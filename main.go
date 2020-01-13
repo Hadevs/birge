@@ -16,11 +16,11 @@ func main() {
     redisURL  = os.Getenv("REDIS_URL")
 	)
 
-  c, err := redis.DialURL(redisURL)
+  client, err := redis.DialURL(redisURL)
   if err != nil {
     log.Fatal(err)
   }
-  defer c.Close()
+  defer client.Close()
 
 	webhook := &tb.Webhook{
 		Listen:   ":" + port,
@@ -96,10 +96,14 @@ func main() {
 	}
 
   b.Handle("/whoami", func(m *tb.Message) {
+    client.Send("SET", m.Sender.ID, "whoami")
+    defer client.Receive()
     b.Send(m.Sender, fmt.Sprintf("%d", m.Sender.ID))
   })
 
   b.Handle("/start", func(m *tb.Message) {
+    client.Send("SET", m.Sender.ID, "start")
+    defer client.Receive()
     inlineKeys := [][]tb.InlineButton{
       []tb.InlineButton{enterBtn, qualifyBtn},
       []tb.InlineButton{infoBtn}}
@@ -111,8 +115,10 @@ func main() {
   })
 
   b.Handle(&infoBtn, func(c *tb.Callback) {
+    client.Send("SET", c.Sender.ID, "info")
+    defer client.Receive()
     b.Respond(c, &tb.CallbackResponse{
-        ShowAlert: false,
+      ShowAlert: false,
     })
 
     inlineKeys := [][]tb.InlineButton{
@@ -135,9 +141,44 @@ Swift Exchange - приватная биржа для доверенных ра�
     &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
   })
 
-	b.Handle("/hello", func(m *tb.Message) {
-		b.Send(m.Sender, "Hi!")
-	})
+  b.Handle(&backBtn, func(c *tb.Callback) {
+    client.Send("GET", c.Sender.ID)
+    v, err := client.Receive()
+    if err != nil {
+      log.Print(err)
+      client.Send("SET", c.Sender.ID, "start")
+      defer client.Receive()
+      inlineKeys := [][]tb.InlineButton{
+        []tb.InlineButton{enterBtn, qualifyBtn},
+        []tb.InlineButton{infoBtn}}
+      b.Send(
+        c.Sender,
+        "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
+        &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
+    }
+    switch v {
+      case "info":
+        client.Send("SET", c.Sender.ID, "start")
+        defer client.Receive()
+        inlineKeys := [][]tb.InlineButton{
+          []tb.InlineButton{enterBtn, qualifyBtn},
+          []tb.InlineButton{infoBtn}}
+        b.Send(
+          c.Sender,
+          "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
+          &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
+      default:
+        client.Send("SET", c.Sender.ID, "start")
+        defer client.Receive()
+        inlineKeys := [][]tb.InlineButton{
+          []tb.InlineButton{enterBtn, qualifyBtn},
+          []tb.InlineButton{infoBtn}}
+        b.Send(
+          c.Sender,
+          "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
+          &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
+    }
+  })
 
 	b.Start()
 }
