@@ -88,8 +88,8 @@ func main() {
   b.handle("/start", func(m *tb.Message) {
     inlineKeys := [][]tb.InlineButton{
       []tb.InlineButton{enterBtn, qualifyBtn},
-      []tb.InlineButton{infoBtn}
-    }
+      []tb.InlineButton{infoBtn}}
+
     b.Send(
       m.Sender,
       "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
