@@ -201,7 +201,7 @@ Swift Exchange - приватная биржа для доверенных ра�
       log.Print(err)
     }
     log.Print(v)
-    switch v {
+    switch string(v) {
       case "info":
         client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "start")
         client.Flush()
