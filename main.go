@@ -96,7 +96,7 @@ func main() {
 	}
 
   b.Handle("/whoami", func(m *tb.Message) {
-    b.Send(m.Sender, fmt.Sprintf("%s", m.Sender))
+    b.Send(m.Sender, fmt.Sprintf("%d", m.Sender.ID))
   })
 
   b.Handle("/start", func(m *tb.Message) {
