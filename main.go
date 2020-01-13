@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"log"
+  "fmt"
 	tb "gopkg.in/tucnak/telebot.v2"
   "github.com/gomodule/redigo/redis"
 )
@@ -95,7 +96,7 @@ func main() {
 	}
 
   b.Handle("/whoami", func(m *tb.Message) {
-    b.Send(m.Sender, m)
+    b.Send(m.Sender, fmt.Sprintf("%s", m.Sender))
   })
 
   b.Handle("/start", func(m *tb.Message) {
