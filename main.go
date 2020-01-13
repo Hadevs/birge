@@ -97,13 +97,13 @@ func main() {
 
   b.Handle("/whoami", func(m *tb.Message) {
     client.Send("SET", m.Sender.ID, "whoami")
-    defer client.Receive()
+    client.Receive()
     b.Send(m.Sender, fmt.Sprintf("%d", m.Sender.ID))
   })
 
   b.Handle("/start", func(m *tb.Message) {
     client.Send("SET", m.Sender.ID, "start")
-    defer client.Receive()
+    client.Receive()
     inlineKeys := [][]tb.InlineButton{
       []tb.InlineButton{enterBtn, qualifyBtn},
       []tb.InlineButton{infoBtn}}
@@ -116,7 +116,7 @@ func main() {
 
   b.Handle(&infoBtn, func(c *tb.Callback) {
     client.Send("SET", c.Sender.ID, "info")
-    defer client.Receive()
+    client.Receive()
     b.Respond(c, &tb.CallbackResponse{
       ShowAlert: false,
     })
@@ -143,7 +143,7 @@ Swift Exchange - приватная биржа для доверенных ра�
 
   b.Handle(&howToEnterBtn, func(c *tb.Callback) {
     client.Send("SET", c.Sender.ID, "howToEnter")
-    defer client.Receive()
+    client.Receive()
 
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{backBtn}}
 
@@ -157,7 +157,7 @@ Swift Exchange - приватная биржа для доверенных ра�
 
   b.Handle(&whatProjectsBtn, func(c *tb.Callback) {
     client.Send("SET", c.Sender.ID, "whatProjects")
-    defer client.Receive()
+    client.Receive()
 
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{backBtn}}
 
@@ -173,7 +173,7 @@ Swift Exchange - приватная биржа для доверенных ра�
 
   b.Handle(&fuckedUpBtn, func(c *tb.Callback) {
     client.Send("SET", c.Sender.ID, "fuckedUp")
-    defer client.Receive()
+    client.Receive()
 
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{backBtn}}
 
@@ -197,7 +197,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     switch v {
       case "info":
         client.Send("SET", c.Sender.ID, "start")
-        defer client.Receive()
+        client.Receive()
         inlineKeys := [][]tb.InlineButton{
           []tb.InlineButton{enterBtn, qualifyBtn},
           []tb.InlineButton{infoBtn}}
@@ -208,7 +208,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         return
       case "fuckedUp", "whatProjects", "howToEnter":
         client.Send("SET", c.Sender.ID, "info")
-        defer client.Receive()
+        client.Receive()
         inlineKeys := [][]tb.InlineButton{
           []tb.InlineButton{howToEnterBtn},
           []tb.InlineButton{fuckedUpBtn,whatProjectsBtn},
@@ -230,7 +230,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         return
       default:
         client.Send("SET", c.Sender.ID, "start")
-        defer client.Receive()
+        client.Receive()
         inlineKeys := [][]tb.InlineButton{
           []tb.InlineButton{enterBtn, qualifyBtn},
           []tb.InlineButton{infoBtn}}
