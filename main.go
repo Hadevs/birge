@@ -200,8 +200,8 @@ Swift Exchange - приватная биржа для доверенных ра�
     if err != nil {
       log.Print(err)
     }
-    log.Print(v)
-    switch string(v) {
+    position := fmt.Sprintf("%s", v)
+    switch position {
       case "info":
         client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "start")
         client.Flush()
