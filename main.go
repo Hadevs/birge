@@ -24,9 +24,10 @@ func main() {
 	}
 
   // here are buttons defined
-  backBtn := tb.InlineButton{
-    Unique: "back",
-    Text:   "↩️ Назад"}
+  
+  // backBtn := tb.InlineButton{
+  //   Unique: "back",
+  //   Text:   "↩️ Назад"}
 
   enterBtn := tb.InlineButton{
     Unique: "enter",
@@ -40,45 +41,45 @@ func main() {
     Unique: "info",
     Text:   "📃 Информация о бирже"}
 
-  howToEnterBtn := tb.InlineButton{
-    Unique: "howToEnter",
-    Text:   "🗝 Как попасть на биржу?"}
+  // howToEnterBtn := tb.InlineButton{
+  //   Unique: "howToEnter",
+  //   Text:   "🗝 Как попасть на биржу?"}
 
-  fuckedUpBtn := tb.InlineButton{
-    Unique: "fuckedUp",
-    Text:   "📆 Что будет, если я не уложусь в срок?"}
+  // fuckedUpBtn := tb.InlineButton{
+  //   Unique: "fuckedUp",
+  //   Text:   "📆 Что будет, если я не уложусь в срок?"}
 
-  whatProjectsBtn := tb.InlineButton{
-    Unique: "whatProjects",
-    Text:   "📑 Какие проекты предоставляет биржа?"}
+  // whatProjectsBtn := tb.InlineButton{
+  //   Unique: "whatProjects",
+  //   Text:   "📑 Какие проекты предоставляет биржа?"}
 
-  currentProjectBtn := tb.InlineButton{
-    Unique: "currentProject",
-    Text:   "🛎 Мой текущий проект"}
+  // currentProjectBtn := tb.InlineButton{
+  //   Unique: "currentProject",
+  //   Text:   "🛎 Мой текущий проект"}
 
-  showOffersBtn := tb.InlineButton{
-    Unique: "showOffers",
-    Text:   "📜 Посмотреть текущие предложения"}
+  // showOffersBtn := tb.InlineButton{
+  //   Unique: "showOffers",
+  //   Text:   "📜 Посмотреть текущие предложения"}
 
-  askAdminBtn := tb.InlineButton{
-    Unique: "askAdmin",
-    Text:   "💡 Вопрос администрации"}
+  // askAdminBtn := tb.InlineButton{
+  //   Unique: "askAdmin",
+  //   Text:   "💡 Вопрос администрации"}
 
-  techSuppBtn := tb.InlineButton{
-    Unique: "techSupp",
-    Text:   "📦 Получить техническую помощь"}
+  // techSuppBtn := tb.InlineButton{
+  //   Unique: "techSupp",
+  //   Text:   "📦 Получить техническую помощь"}
 
-  redeemMilestoneProjectBtn := tb.InlineButton{
-    Unique: "redeemMilestoneProject",
-    Text:   "✅ Закрыть этап/проект"}
+  // redeemMilestoneProjectBtn := tb.InlineButton{
+  //   Unique: "redeemMilestoneProject",
+  //   Text:   "✅ Закрыть этап/проект"}
 
-  cancelProjectBtn := tb.InlineButton{
-    Unique: "cancelProject",
-    Text:   "❌ Отказаться от проекта"}
+  // cancelProjectBtn := tb.InlineButton{
+  //   Unique: "cancelProject",
+  //   Text:   "❌ Отказаться от проекта"}
 
-  takeProjectBtn := tb.InlineButton{
-    Unique: "takeProject",
-    Text:   "❇️ Принять проект #1"}
+  // takeProjectBtn := tb.InlineButton{
+  //   Unique: "takeProject",
+  //   Text:   "❇️ Принять проект #1"}
 
 	b, err := tb.NewBot(pref)
 	if err != nil {
