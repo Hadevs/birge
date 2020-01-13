@@ -96,13 +96,13 @@ func main() {
 	}
 
   b.Handle("/whoami", func(m *tb.Message) {
-    client.Send("SET", m.Sender.ID, "whoami")
+    client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "whoami")
     client.Receive()
     b.Send(m.Sender, fmt.Sprintf("%d", m.Sender.ID))
   })
 
   b.Handle("/start", func(m *tb.Message) {
-    client.Send("SET", m.Sender.ID, "start")
+    client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "start")
     client.Receive()
     inlineKeys := [][]tb.InlineButton{
       []tb.InlineButton{enterBtn, qualifyBtn},
@@ -115,7 +115,7 @@ func main() {
   })
 
   b.Handle(&infoBtn, func(c *tb.Callback) {
-    client.Send("SET", c.Sender.ID, "info")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "info")
     client.Receive()
     b.Respond(c, &tb.CallbackResponse{
       ShowAlert: false,
@@ -142,7 +142,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&howToEnterBtn, func(c *tb.Callback) {
-    client.Send("SET", c.Sender.ID, "howToEnter")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "howToEnter")
     client.Receive()
 
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{backBtn}}
@@ -156,7 +156,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&whatProjectsBtn, func(c *tb.Callback) {
-    client.Send("SET", c.Sender.ID, "whatProjects")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "whatProjects")
     client.Receive()
 
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{backBtn}}
@@ -172,7 +172,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&fuckedUpBtn, func(c *tb.Callback) {
-    client.Send("SET", c.Sender.ID, "fuckedUp")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "fuckedUp")
     client.Receive()
 
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{backBtn}}
@@ -188,7 +188,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&backBtn, func(c *tb.Callback) {
-    client.Send("GET", c.Sender.ID)
+    client.Send("GET", fmt.Sprintf("%s", c.Sender.ID))
     v, err := client.Receive()
     if err != nil {
       log.Print(err)
@@ -196,7 +196,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     log.Print(v)
     switch v {
       case "info":
-        client.Send("SET", c.Sender.ID, "start")
+        client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "start")
         client.Receive()
         inlineKeys := [][]tb.InlineButton{
           []tb.InlineButton{enterBtn, qualifyBtn},
@@ -207,7 +207,7 @@ Swift Exchange - приватная биржа для доверенных ра�
           &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
         return
       case "fuckedUp", "whatProjects", "howToEnter":
-        client.Send("SET", c.Sender.ID, "info")
+        client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "info")
         client.Receive()
         inlineKeys := [][]tb.InlineButton{
           []tb.InlineButton{howToEnterBtn},
@@ -229,7 +229,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
         return
       default:
-        client.Send("SET", c.Sender.ID, "start")
+        client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "start")
         client.Receive()
         inlineKeys := [][]tb.InlineButton{
           []tb.InlineButton{enterBtn, qualifyBtn},
