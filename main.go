@@ -85,7 +85,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-  b.handle("/start", func(m *tb.Message) {
+  b.Handle("/start", func(m *tb.Message) {
     inlineKeys := [][]tb.InlineButton{
       []tb.InlineButton{enterBtn, qualifyBtn},
       []tb.InlineButton{infoBtn}}
