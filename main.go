@@ -25,9 +25,9 @@ func main() {
 
   // here are buttons defined
 
-  // backBtn := tb.InlineButton{
-  //   Unique: "back",
-  //   Text:   "↩️ Назад"}
+  backBtn := tb.InlineButton{
+    Unique: "back",
+    Text:   "↩️ Назад"}
 
   enterBtn := tb.InlineButton{
     Unique: "enter",
@@ -41,17 +41,17 @@ func main() {
     Unique: "info",
     Text:   "📃 Информация о бирже"}
 
-  // howToEnterBtn := tb.InlineButton{
-  //   Unique: "howToEnter",
-  //   Text:   "🗝 Как попасть на биржу?"}
+  howToEnterBtn := tb.InlineButton{
+    Unique: "howToEnter",
+    Text:   "🗝 Как попасть на биржу?"}
 
-  // fuckedUpBtn := tb.InlineButton{
-  //   Unique: "fuckedUp",
-  //   Text:   "📆 Что будет, если я не уложусь в срок?"}
+  fuckedUpBtn := tb.InlineButton{
+    Unique: "fuckedUp",
+    Text:   "📆 Что будет, если я не уложусь в срок?"}
 
-  // whatProjectsBtn := tb.InlineButton{
-  //   Unique: "whatProjects",
-  //   Text:   "📑 Какие проекты предоставляет биржа?"}
+  whatProjectsBtn := tb.InlineButton{
+    Unique: "whatProjects",
+    Text:   "📑 Какие проекты предоставляет биржа?"}
 
   // currentProjectBtn := tb.InlineButton{
   //   Unique: "currentProject",
@@ -101,6 +101,12 @@ func main() {
     b.Respond(c, &tb.CallbackResponse{
         ShowAlert: false,
     })
+
+    inlineKeys := [][]tb.InlineButton{
+      []tb.InlineButton{howToEnterBtn},
+      []tb.InlineButton{fuckedUpBtn,whatProjectsBtn},
+      []tb.InlineButton{backBtn}}
+
     b.Send(c.Sender, `📃 Информация о бирже:
 
 Swift Exchange - приватная биржа для доверенных разработчиков.
@@ -112,7 +118,8 @@ Swift Exchange - приватная биржа для доверенных ра�
 📅 Поднятие вашего рейтинга, как разработчика, развитие личного бренда
 📈 Постоянный поток проектов
 
-Биржа забирает 5% с каждого проекта и выплачивает разработчику заработанные деньги сразу после принятия работ заказчиком. Способ оплаты обсуждается с каждым разработчиком отдельно.`)
+Биржа забирает 5% с каждого проекта и выплачивает разработчику заработанные деньги сразу после принятия работ заказчиком. Способ оплаты обсуждается с каждым разработчиком отдельно.`,
+    &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
   })
 
 	b.Handle("/hello", func(m *tb.Message) {
