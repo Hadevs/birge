@@ -275,9 +275,11 @@ Swift Exchange - приватная биржа для доверенных ра�
       return
     }
     if position == "qualify0" {
-      client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), fmt.Sprintf("%s", m.Payload))
-      client.Flush()
-      client.Receive()
+      // client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), fmt.Sprintf("%s\n%s", m.Sender.Username, m.Payload))
+      // client.Flush()
+      // client.Receive()
+      admin := tb.User{866741604,"","","","",false}
+      b.Forward(&admin, m)
       b.Send(m.Sender, "Спасибо, администрация получила Вашу заявку и в самое ближайшее время свяжется с вами в Telegram! Вернитесь в меню с помощью /start")
       return
     }
