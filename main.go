@@ -1,8 +1,9 @@
 package main
 
 import (
-    "os"
-    tb "gopkg.in/tucnak/telebot.v2"
+  "os"
+  "log"
+  tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
