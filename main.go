@@ -4,6 +4,7 @@ import (
 	"os"
 	"log"
 	tb "gopkg.in/tucnak/telebot.v2"
+  "github.com/gomodule/redigo/redis"
 )
 
 func main() {
@@ -11,7 +12,14 @@ func main() {
 		port      = os.Getenv("PORT")       // sets automatically
 		publicURL = os.Getenv("PUBLIC_URL") // you must add it to your config vars
 		token     = os.Getenv("TOKEN")      // you must add it to your config vars
+    redisURL  = os.Getenv("REDIS_URL")
 	)
+
+  c, err := redis.DialURL(redisURL)
+  if err != nil {
+    log.Fatal(err)
+  }
+  defer c.Close()
 
 	webhook := &tb.Webhook{
 		Listen:   ":" + port,
@@ -85,6 +93,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+  b.Handle("/whoami", func(m *tb.Message) {
+    b.Send(m.Sender, m)
+  })
 
   b.Handle("/start", func(m *tb.Message) {
     inlineKeys := [][]tb.InlineButton{
