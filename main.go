@@ -146,15 +146,6 @@ Swift Exchange - приватная биржа для доверенных ра�
     v, err := client.Receive()
     if err != nil {
       log.Print(err)
-      client.Send("SET", c.Sender.ID, "start")
-      defer client.Receive()
-      inlineKeys := [][]tb.InlineButton{
-        []tb.InlineButton{enterBtn, qualifyBtn},
-        []tb.InlineButton{infoBtn}}
-      b.Send(
-        c.Sender,
-        "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
-        &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
     }
     switch v {
       case "info":
