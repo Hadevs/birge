@@ -193,6 +193,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     if err != nil {
       log.Print(err)
     }
+    log.Print(v)
     switch v {
       case "info":
         client.Send("SET", c.Sender.ID, "start")
