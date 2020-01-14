@@ -206,7 +206,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&askAdminBtn, func(c *tb.Callback) {
-    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "qualify0")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "askAdmin0")
     client.Flush()
     client.Receive()
 
@@ -218,7 +218,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&techSuppBtn, func(c *tb.Callback) {
-    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "qualify0")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "techSupp0")
     client.Flush()
     client.Receive()
 
@@ -236,7 +236,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&redeemMilestoneProjectBtn, func(c *tb.Callback) {
-    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "qualify0")
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "redeemMilestoneProject0")
     client.Flush()
     client.Receive()
 
@@ -320,7 +320,7 @@ Swift Exchange - приватная биржа для доверенных ра�
       b.Send(m.Sender, "К сожалению, что-то пошло не так. Пожалуйста, попробуйте позже. Администрация уже работает над решением проблемы!")
       return
     }
-    admin := tb.User{866741604,"","","","",false}
+    admin := tb.User{73346375,"","","","",false}
     switch position {
       case "qualify0":
         b.Forward(&admin, m)
