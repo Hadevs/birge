@@ -141,9 +141,9 @@ func main() {
   //   Unique: "currentProject",
   //   Text:   "🛎 Мой текущий проект"}
 
-  // showOffersBtn := tb.InlineButton{
-  //   Unique: "showOffers",
-  //   Text:   "📜 Посмотреть текущие предложения"}
+  showOffersBtn := tb.InlineButton{
+    Unique: "showOffers",
+    Text:   "📜 Посмотреть текущие предложения"}
 
   askAdminBtn := tb.InlineButton{
     Unique: "askAdmin",
@@ -403,6 +403,17 @@ Swift Exchange - приватная биржа для доверенных ра�
           "Добро пожаловать в Swift Exchange! Пожалуйста, выберите следующий шаг:",
           &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
         return
+    }
+  })
+
+  b.Handle(&showOffersBtn, func(c *tb.Callback) {
+    projects := []SEproject{}
+    db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
+    for _, project := range projects {
+      b.Send(c.Sender, fmt.Sprintf(`%s
+%s
+Сложность: %s | Стоимость: %s
+`, project.Name, project.Description, project.Difficulty, project.Price))
     }
   })
 
