@@ -4,9 +4,48 @@ import (
 	"os"
 	"log"
   "fmt"
+  "strings"
+
 	tb "gopkg.in/tucnak/telebot.v2"
+
+  // "database/sql"
+  _ "github.com/lib/pq"
+  "github.com/jmoiron/sqlx"
   "github.com/gomodule/redigo/redis"
 )
+
+var schema = `
+  CREATE TABLE IF NOT EXISTS SEworker(
+    id SERIAL PRIMARY KEY,
+    tid TEXT,
+    approved BOOLEAN,
+    cpid INT
+  );
+
+  CREATE TABLE IF NOT EXISTS SEproject(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    difficulty INT,
+    price INT,
+    paid INT,
+    progress INT
+  );
+`
+
+func parsePsqlElements(url string) (string, string, string, string, string) {
+  split := strings.Split(url, "@")
+  unamepwdsplit := strings.Split(split[0], "//")
+  unamepwd := strings.Split(unamepwdsplit[1], ":")
+  uname := unamepwd[0]
+  pwd := unamepwd[1]
+  urlportdbname := strings.Split(split[1], ":")
+  link := urlportdbname[0]
+  portdbname := strings.Split(urlportdbname[1], "/")
+  port := portdbname[0]
+  dbname := portdbname[1]
+  return uname, pwd, link, port, dbname
+}
 
 func main() {
 	var (
@@ -14,7 +53,18 @@ func main() {
 		publicURL = os.Getenv("PUBLIC_URL") // you must add it to your config vars
 		token     = os.Getenv("TOKEN")      // you must add it to your config vars
     redisURL  = os.Getenv("REDIS_URL")
+    psqlURL   = os.Getenv("DATABASE_URL")
+    dbuname, dbpwd, dblink, dbport, dbname = parsePsqlElements(psqlURL)
+    psqlInfo  = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s" +
+    " sslmode=disable", dblink, dbport, dbuname, dbpwd, dbname)
 	)
+
+  db, err := sqlx.Connect("postgres", psqlInfo)
+  if err != nil {
+    log.Panic(err)
+  }
+  defer db.Close()
+  db.MustExec(schema)
 
   client, err := redis.DialURL(redisURL)
   if err != nil {
