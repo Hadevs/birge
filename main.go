@@ -483,6 +483,10 @@ Swift Exchange - приватная биржа для доверенных ра�
           b.Send(m.Sender, "Ты ебанутый блять? Пиши цифры блять, ЦИФРЫ СУКА, ЗНАЕШЬ ТАМ 1,2,3,4,5,6,7,8,9,0? НЕТ? ДЕБИЛ БЛЯТЬ")
           return
         }
+        fmt.Println(projectname)
+        fmt.Println(projectdesc)
+        fmt.Println(projectdiff)
+        fmt.Println(projectprice)
         tx := db.MustBegin()
         tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress) VALUES ($1, $2, $3, $4, 0, 0)`, projectname, projectdesc, projectprice, projectdiff)
         tx.Commit()
