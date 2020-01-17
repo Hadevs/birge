@@ -72,7 +72,7 @@ func main() {
     redisURL  = os.Getenv("REDIS_URL")
     psqlURL   = os.Getenv("DATABASE_URL")
     dbuname, dbpwd, dblink, dbport, dbname = parsePsqlElements(psqlURL)
-    psqlInfo  = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s" +
+    psqlInfo  = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s" +
     " sslmode=disable", dblink, dbport, dbuname, dbpwd, dbname)
 	)
 
