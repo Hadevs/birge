@@ -412,7 +412,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     for _, project := range projects {
       b.Send(c.Sender, fmt.Sprintf(`%s
 %s
-Сложность: %s | Стоимость: %s
+Сложность: %d | Стоимость: %d
 `, project.Name, project.Description, project.Difficulty, project.Price))
     }
   })
