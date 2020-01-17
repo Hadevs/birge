@@ -224,9 +224,8 @@ Swift Exchange - приватная биржа для доверенных ра�
     client.Flush()
     client.Receive()
 
-    // tx := db.MustBegin()
-    // tx.MustExec("INSERT INTO person (first_name, last_name, email) VALUES ($1, $2, $3)", "Jason", "Moiron", "jmoiron@jmoiron.net")
-    // tx.Commit()
+    inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{showOffersBtn}}
+
     user := SEworker{}
     err := db.Get(&user, "SELECT * FROM SEworker WHERE tid=$1", c.Sender.ID)
     if err != nil || user.Approved != true {
@@ -237,7 +236,8 @@ Swift Exchange - приватная биржа для доверенных ра�
     db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
     b.Send(c.Sender, fmt.Sprintf(`🔑 Войти на биржу:
 
-Вы вошли на Swift Exchange. У вас сейчас %d открытых предложений по проектам.`, len(projects)))
+Вы вошли на Swift Exchange. У вас сейчас %d открытых предложений по проектам.`, len(projects)),
+    &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
   })
 
   b.Handle(&howToEnterBtn, func(c *tb.Callback) {
