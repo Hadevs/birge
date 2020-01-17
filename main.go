@@ -5,6 +5,7 @@ import (
 	"log"
   "fmt"
   "strings"
+  "strconv"
 
 	tb "gopkg.in/tucnak/telebot.v2"
 
@@ -32,6 +33,23 @@ var schema = `
     progress INT
   );
 `
+
+var SEworker struct {
+  Id int `db:"id"`
+  Tid string `db:"tid"`
+  Approved bool `db:"approved"`
+  Cpid int `db:"cpid"`
+}
+
+var SEproject struct {
+  Id int `db:"id"`
+  Name string `db:"name"`
+  Description string `db:"description"`
+  Difficulty int `db:"difficulty"`
+  Price int `db:"price"`
+  Paid int `db:"paid"`
+  Progress int `db:"progress"`
+}
 
 func parsePsqlElements(url string) (string, string, string, string, string) {
   split := strings.Split(url, "@")
@@ -192,6 +210,32 @@ Swift Exchange - приватная биржа для доверенных ра�
 
 Биржа забирает 5% с каждого проекта и выплачивает разработчику заработанные деньги сразу после принятия работ заказчиком. Способ оплаты обсуждается с каждым разработчиком отдельно.`,
     &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
+  })
+
+  b.Handle(&enterBtn, func(c *tb.Callback) {
+    client.Send("SET", fmt.Sprintf("%s", c.Sender.ID), "enter")
+    client.Flush()
+    client.Receive()
+
+    // tx := db.MustBegin()
+    // tx.MustExec("INSERT INTO person (first_name, last_name, email) VALUES ($1, $2, $3)", "Jason", "Moiron", "jmoiron@jmoiron.net")
+    // tx.Commit()
+    user := SEworker{}
+    err := db.Get(&user, "SELECT * FROM SEworker WHERE tid=$1", c.Sender.ID)
+    if err != nil {
+      log.Printf(err)
+      b.Send(c.Sender, `Что-то пошло не так, кажется Санек опять запушил в пятницу и все поломал. Напиши админам, пускай разбудят шашлыка`)
+      return nil
+    }
+    if user.Approved != true {
+      b.Send(c.Sender, `Сначала надо пройти собеседование, для этого нажми на "🧧 Подать заявку"`)
+      return nil
+    }
+    projects := []SEproject{}
+    db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
+    b.Send(c.Sender, fmt.Sprintf(`🔑 Войти на биржу:
+
+Вы вошли на Swift Exchange. У вас сейчас %d открытых предложений по проектам.`, len(projects)))
   })
 
   b.Handle(&howToEnterBtn, func(c *tb.Callback) {
@@ -360,6 +404,15 @@ Swift Exchange - приватная биржа для доверенных ра�
     }
   })
 
+  b.Handle("/approve", func(m *tb.Message) {
+    split := strings.Split(m.Payload, " ")
+    id := split[1]
+    tx := db.MustBegin()
+    tx.MustExec(`INSERT INTO SEworker(tid, approved, cpid) VALUES ($1, true, 0)`, strconv.Itoa(id))
+    tx.Commit()
+    b.Send(m.Sender, "Успешно добавлен новый пидераст, деньги мне плати блять")
+  })
+
   b.Handle(tb.OnText, func(m *tb.Message) {
     client.Send("GET", fmt.Sprintf("%s", m.Sender.ID))
     client.Flush()
@@ -373,6 +426,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     admin := tb.User{73346375,"","","","",false}
     switch position {
       case "qualify0":
+        b.Send(&admin, fmt.Sprintf("%d", m.Sender.ID))
         b.Forward(&admin, m)
         b.Send(m.Sender, "Спасибо, администрация получила Вашу заявку и в самое ближайшее время свяжется с вами в Telegram! Вернитесь в меню с помощью /start")
         return
