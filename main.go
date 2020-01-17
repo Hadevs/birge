@@ -51,13 +51,6 @@ type SEproject struct {
   Progress int `db:"progress"`
 }
 
-type Newproject struct {
-  Name string
-  Description string
-  Difficulty int
-  Price int
-}
-
 func parsePsqlElements(url string) (string, string, string, string, string) {
   split := strings.Split(url, "@")
   unamepwdsplit := strings.Split(split[0], "//")
