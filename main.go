@@ -406,6 +406,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle("/approve", func(m *tb.Message) {
+    fmt.Println(m.Payload)
     split := strings.Split(m.Payload, " ")
     id := split[1]
     tx := db.MustBegin()
