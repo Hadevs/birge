@@ -406,11 +406,8 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle("/approve", func(m *tb.Message) {
-    fmt.Println(m.Payload)
-    split := strings.Split(m.Payload, " ")
-    id := split[1]
     tx := db.MustBegin()
-    tx.MustExec(`INSERT INTO SEworker(tid, approved, cpid) VALUES ($1, true, 0)`, id)
+    tx.MustExec(`INSERT INTO SEworker(tid, approved, cpid) VALUES ($1, true, 0)`, m.Payload)
     tx.Commit()
     b.Send(m.Sender, "Успешно добавлен новый пидераст, деньги мне плати блять")
   })
