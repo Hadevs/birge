@@ -5,6 +5,7 @@ import (
 	"log"
   "fmt"
   "strings"
+  "strconv"
 
 	tb "gopkg.in/tucnak/telebot.v2"
 
@@ -50,6 +51,13 @@ type SEproject struct {
   Progress int `db:"progress"`
 }
 
+type Newproject struct {
+  Name string
+  Description string
+  Difficulty int
+  Price int
+}
+
 func parsePsqlElements(url string) (string, string, string, string, string) {
   split := strings.Split(url, "@")
   unamepwdsplit := strings.Split(split[0], "//")
@@ -74,6 +82,11 @@ func main() {
     dbuname, dbpwd, dblink, dbport, dbname = parsePsqlElements(psqlURL)
     psqlInfo  = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s" +
     " sslmode=disable", dblink, dbport, dbuname, dbpwd, dbname)
+    // Cuz I'm too lazy to do it the right way
+    projectname  = ""
+    projectdesc  = ""
+    projectdiff  = 0
+    projectprice = 0
 	)
 
   fmt.Println(psqlInfo)
@@ -412,6 +425,13 @@ Swift Exchange - приватная биржа для доверенных ра�
     b.Send(m.Sender, "Успешно добавлен новый пидераст, деньги мне плати блять")
   })
 
+  b.Handle("/project", func(m *tb.Message) {
+    client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "project0")
+    client.Flush()
+    client.Receive()
+    b.Send(m.Sender, "Ну че, хуила, новый проект нашел для плебеев? Ну заполняй блять, гандон. Деньги мне плати блять")
+  })
+
   b.Handle(tb.OnText, func(m *tb.Message) {
     client.Send("GET", fmt.Sprintf("%s", m.Sender.ID))
     client.Flush()
@@ -441,6 +461,39 @@ Swift Exchange - приватная биржа для доверенных ра�
         b.Forward(&admin, m)
         b.Send(m.Sender, "Спасибо, администрация получила Ваш запрос закрытие этапа/проекта и в самое ближайшее время свяжется с вами в Telegram! Вернитесь в меню с помощью /start")
         return
+      case "project0":
+        projectname = m.Text
+        client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "project1")
+        client.Flush()
+        client.Receive()
+        b.Send(m.Sender, "Теперь пиши блять описание для своего ссаного проекта, хуила. Деньги мне плати блять")
+        return
+      case "project1":
+        projectdesc = m.Text
+        client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "project2")
+        client.Flush()
+        client.Receive()
+        b.Send(m.Sender, "Теперь пиши блять насколько ахуенно сложный проект ты там придумал (1-5). Деньги мне плати блять")
+      case "project2":
+        projectdiff, err = strconv.Atoi(m.Text)
+        if err != nil {
+          b.Send(m.Sender, "Ты ебанутый блять? Пиши цифры блять, ЦИФРЫ СУКА, ЗНАЕШЬ ТАМ 1,2,3,4,5,6,7,8,9,0? НЕТ? ДЕБИЛ БЛЯТЬ")
+          return
+        }
+        client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "project3")
+        client.Flush()
+        client.Receive()
+        b.Send(m.Sender, "Теперь пиши блять сколько грошей (рублей) ты заплатишь плебсу, который это говно делать будет. Деньги мне плати блять")
+      case "project3":
+        projectprice, err = strconv.Atoi(m.Text)
+        if err != nil {
+          b.Send(m.Sender, "Ты ебанутый блять? Пиши цифры блять, ЦИФРЫ СУКА, ЗНАЕШЬ ТАМ 1,2,3,4,5,6,7,8,9,0? НЕТ? ДЕБИЛ БЛЯТЬ")
+          return
+        }
+        tx := db.MustBegin()
+        tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress) VALUES ($1, $2, $3, $4, 0, 0)`, projectname, projectdesc, projectprice, projectdiff)
+        tx.Commit()
+        b.Send(m.Sender, "Поздравляю, долбаеб, все готово, проект теперь в списке, иди ищи плебсов, чтобы этого говно делали. Деньги мне плати блять")
       default:
         b.Send(m.Sender, "Я не понимаю обычный текст, нажмите /start")
     }
