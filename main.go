@@ -76,6 +76,8 @@ func main() {
     " sslmode=disable", dblink, dbport, dbuname, dbpwd, dbname)
 	)
 
+  fmt.Println(psqlInfo)
+
   db, err := sqlx.Connect("postgres", psqlInfo)
   if err != nil {
     log.Panic(err)
