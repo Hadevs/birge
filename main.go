@@ -5,7 +5,6 @@ import (
 	"log"
   "fmt"
   "strings"
-  "strconv"
 
 	tb "gopkg.in/tucnak/telebot.v2"
 
@@ -34,14 +33,14 @@ var schema = `
   );
 `
 
-var SEworker struct {
+type SEworker struct {
   Id int `db:"id"`
   Tid string `db:"tid"`
   Approved bool `db:"approved"`
   Cpid int `db:"cpid"`
 }
 
-var SEproject struct {
+type SEproject struct {
   Id int `db:"id"`
   Name string `db:"name"`
   Description string `db:"description"`
@@ -223,13 +222,13 @@ Swift Exchange - приватная биржа для доверенных ра�
     user := SEworker{}
     err := db.Get(&user, "SELECT * FROM SEworker WHERE tid=$1", c.Sender.ID)
     if err != nil {
-      log.Printf(err)
+      log.Print(err)
       b.Send(c.Sender, `Что-то пошло не так, кажется Санек опять запушил в пятницу и все поломал. Напиши админам, пускай разбудят шашлыка`)
-      return nil
+      return
     }
     if user.Approved != true {
       b.Send(c.Sender, `Сначала надо пройти собеседование, для этого нажми на "🧧 Подать заявку"`)
-      return nil
+      return
     }
     projects := []SEproject{}
     db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
@@ -408,7 +407,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     split := strings.Split(m.Payload, " ")
     id := split[1]
     tx := db.MustBegin()
-    tx.MustExec(`INSERT INTO SEworker(tid, approved, cpid) VALUES ($1, true, 0)`, strconv.Itoa(id))
+    tx.MustExec(`INSERT INTO SEworker(tid, approved, cpid) VALUES ($1, true, 0)`, id)
     tx.Commit()
     b.Send(m.Sender, "Успешно добавлен новый пидераст, деньги мне плати блять")
   })
