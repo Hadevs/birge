@@ -410,9 +410,9 @@ Swift Exchange - приватная биржа для доверенных ра�
     projects := []SEproject{}
     db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
     for _, project := range projects {
-      b.Send(c.Sender, fmt.Sprintf(`%s
-%s
-Сложность: %d | Стоимость: %d
+      b.Send(c.Sender, fmt.Sprintf(`– %s
+**Задача:** %s
+**Сложность:** %d | **Стоимость:** %d
 `, project.Name, project.Description, project.Difficulty, project.Price))
     }
   })
@@ -494,7 +494,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         fmt.Println(projectdiff)
         fmt.Println(projectprice)
         tx := db.MustBegin()
-        tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress) VALUES ($1, $2, $3, $4, 0, 0)`, projectname, projectdesc, projectprice, projectdiff)
+        tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress) VALUES ($1, $2, $3, $4, 0, 0)`, projectname, projectdesc, projectdiff, projectprice)
         tx.Commit()
         b.Send(m.Sender, "Поздравляю, долбаеб, все готово, проект теперь в списке, иди ищи плебсов, чтобы этого говно делали. Деньги мне плати блять")
         client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "start")
