@@ -161,9 +161,9 @@ func main() {
   //   Unique: "cancelProject",
   //   Text:   "❌ Отказаться от проекта"}
 
-  takeProjectBtn := tb.InlineButton{
-    Unique: "takeProject",
-    Text:   "❇️ Принять проект"}
+  // takeProjectBtn := tb.InlineButton{
+  //   Unique: "takeProject",
+  //   Text:   "❇️ Принять проект"}
 
 	b, err := tb.NewBot(pref)
 	if err != nil {
