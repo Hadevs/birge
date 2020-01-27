@@ -411,7 +411,9 @@ Swift Exchange - приватная биржа для доверенных ра�
     db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
     for _, project := range projects {
       inlineKeys := [][]tb.InlineButton{
-        []tb.InlineButton{takeProjectBtn}}
+        []tb.InlineButton{tb.InlineButton{
+          Unique: fmt.Sprintf("%s_%d", "takeProject", project.Id),
+          Text:   "❇️ Принять проект"}}}
       b.Send(
         c.Sender,
         fmt.Sprintf(`– %s
