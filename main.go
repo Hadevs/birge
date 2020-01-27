@@ -19,8 +19,7 @@ var schema = `
   CREATE TABLE IF NOT EXISTS SEworker(
     id SERIAL PRIMARY KEY,
     tid TEXT,
-    approved BOOLEAN,
-    cpid INT
+    approved BOOLEAN
   );
 
   CREATE TABLE IF NOT EXISTS SEproject(
@@ -30,7 +29,8 @@ var schema = `
     difficulty INT,
     price INT,
     paid INT,
-    progress INT
+    progress INT,
+    worker_id INT
   );
 `
 
@@ -38,7 +38,6 @@ type SEworker struct {
   Id int `db:"id"`
   Tid string `db:"tid"`
   Approved bool `db:"approved"`
-  Cpid int `db:"cpid"`
 }
 
 type SEproject struct {
@@ -49,6 +48,7 @@ type SEproject struct {
   Price int `db:"price"`
   Paid int `db:"paid"`
   Progress int `db:"progress"`
+  WorkerId int `db:"worker_id"`
 }
 
 func parsePsqlElements(url string) (string, string, string, string, string) {
@@ -160,10 +160,6 @@ func main() {
   // cancelProjectBtn := tb.InlineButton{
   //   Unique: "cancelProject",
   //   Text:   "❌ Отказаться от проекта"}
-
-  // takeProjectBtn := tb.InlineButton{
-  //   Unique: "takeProject",
-  //   Text:   "❇️ Принять проект"}
 
 	b, err := tb.NewBot(pref)
 	if err != nil {
@@ -408,7 +404,7 @@ Swift Exchange - приватная биржа для доверенных ра�
 
   b.Handle(&showOffersBtn, func(c *tb.Callback) {
     projects := []SEproject{}
-    db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
+    db.Select(&projects, "SELECT * FROM SEproject WHERE worker_id = 0 ORDER BY id DESC")
     for _, project := range projects {
       inlineKeys := [][]tb.InlineButton{
         []tb.InlineButton{tb.InlineButton{
@@ -426,14 +422,40 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(tb.OnCallback, func(c *tb.Callback) {
-    fmt.Println(c.Data)
-    b.Send(c.Sender, "MEOW")
+    pid := c.Data[len(c.Data) - 1:]
+    if c.Data[:len(c.Data) - 1] == "takeProject_" {
+      project := SEproject{}
+      db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
+      if project.WorkerId != 0 {
+        b.Send(
+          c.Sender,
+          "К сожалению, данный проект уже занят, выберите другой")
+        return
+      }
+      worker := SEworker{}
+      db.Select(&worker, `SELECT * FROM SEworker WHERE tid = $1`, c.Sender.ID)
+      tx := db.MustBegin()
+      tx.MustExec(`UPDATE TABLE SEprojects SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
+      tx.Commit()
+      b.Send(
+        c.Sender,
+        "Этот проект ваш, скоро с вами свяжется администратор для уточнения деталей! Нажмите /start чтобы вернуться в меню")
+      admin := tb.User{73346375,"","","","",false}
+      b.Send(
+        &admin,
+        fmt.Sprintf("Пользователь %s забрал проект, пиздуй рассказывай че там каво", c.Sender.Username))
+      return
+    } else {
+      b.Send(
+        c.Sender,
+        "https://www.youtube.com/watch?v=l60MnDJklnM")
+    }
     return
   })
 
   b.Handle("/approve", func(m *tb.Message) {
     tx := db.MustBegin()
-    tx.MustExec(`INSERT INTO SEworker(tid, approved, cpid) VALUES ($1, true, 0)`, m.Payload)
+    tx.MustExec(`INSERT INTO SEworker(tid, approved) VALUES ($1, true)`, m.Payload)
     tx.Commit()
     b.Send(m.Sender, "Успешно добавлен новый пидераст, деньги мне плати блять")
   })
@@ -508,7 +530,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         fmt.Println(projectdiff)
         fmt.Println(projectprice)
         tx := db.MustBegin()
-        tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress) VALUES ($1, $2, $3, $4, 0, 0)`, projectname, projectdesc, projectdiff, projectprice)
+        tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress, worker_id) VALUES ($1, $2, $3, $4, 0, 0, 0)`, projectname, projectdesc, projectdiff, projectprice)
         tx.Commit()
         b.Send(m.Sender, "Поздравляю, долбаеб, все готово, проект теперь в списке, иди ищи плебсов, чтобы этого говно делали. Деньги мне плати блять")
         client.Send("SET", fmt.Sprintf("%s", m.Sender.ID), "start")
