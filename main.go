@@ -161,9 +161,9 @@ func main() {
   //   Unique: "cancelProject",
   //   Text:   "❌ Отказаться от проекта"}
 
-  // takeProjectBtn := tb.InlineButton{
-  //   Unique: "takeProject",
-  //   Text:   "❇️ Принять проект #1"}
+  takeProjectBtn := tb.InlineButton{
+    Unique: "takeProject",
+    Text:   "❇️ Принять проект"}
 
 	b, err := tb.NewBot(pref)
 	if err != nil {
@@ -410,11 +410,23 @@ Swift Exchange - приватная биржа для доверенных ра�
     projects := []SEproject{}
     db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
     for _, project := range projects {
-      b.Send(c.Sender, fmt.Sprintf(`– %s
+      inlineKeys := [][]tb.InlineButton{
+        []tb.InlineButton{takeProjectBtn}}
+      b.Send(
+        c.Sender,
+        fmt.Sprintf(`– %s
 Задача: %s
 Сложность: %d/5 | Стоимость: %d руб.
-`, project.Name, project.Description, project.Difficulty, project.Price))
+`, project.Name, project.Description, project.Difficulty, project.Price),
+        &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
     }
+    return
+  })
+
+  b.Handle(tb.OnCallback, func(c *tb.Callback) {
+    fmt.Println(c.Data)
+    b.Send(c.Sender, "MEOW")
+    return
   })
 
   b.Handle("/approve", func(m *tb.Message) {
