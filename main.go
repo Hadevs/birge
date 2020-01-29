@@ -481,8 +481,9 @@ Swift Exchange - приватная биржа для доверенных ра�
 
   b.Handle(tb.OnCallback, func(c *tb.Callback) {
     pid := c.Data[len(c.Data) - 1:]
-    cut := fmt.Sprintf("%s", c.Data[:len(c.Data) - 2])
-    if strings.Compare(cut, takeProjectStr) == 0 {
+    split := strings.Split(c.Data, "_")
+    cmd := split[0]
+    if strings.Compare(cmd, takeProjectStr) == 0 {
       project := SEproject{}
       db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
       if project.WorkerId != 0 {
