@@ -182,7 +182,7 @@ func main() {
 	}
 
   b.Handle("/whoami", func(m *tb.Message) {
-    err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "whoami", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "whoami", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -192,7 +192,7 @@ func main() {
   })
 
   b.Handle("/start", func(m *tb.Message) {
-    err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "start", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "start", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -209,7 +209,7 @@ func main() {
   })
 
   b.Handle(&infoBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "info", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "info", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -241,7 +241,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&enterBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "enter", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "enter", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -265,7 +265,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&howToEnterBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "howToEnter", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "howToEnter", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -283,7 +283,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&whatProjectsBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "whatProjects", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "whatProjects", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -303,7 +303,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&fuckedUpBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "fuckedUp", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "fuckedUp", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -323,7 +323,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&qualifyBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "qualify0", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "qualify0", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -338,7 +338,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&askAdminBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "askAdmin0", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "askAdmin0", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -353,7 +353,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&techSuppBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "techSupp0", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "techSupp0", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -374,7 +374,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(&redeemMilestoneProjectBtn, func(c *tb.Callback) {
-    err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "redeemMilestoneProject0", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "redeemMilestoneProject0", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -401,7 +401,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     position := fmt.Sprintf("%s", v)
     switch position {
       case "info":
-        err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "start", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "start", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -416,7 +416,7 @@ Swift Exchange - приватная биржа для доверенных ра�
           &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
         return
       case "fuckedUp", "whatProjects", "howToEnter":
-        err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "info", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "info", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -442,7 +442,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
         return
       default:
-        err := client.Set(fmt.Sprintf("%s", c.Sender.ID), "start", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "start", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -518,7 +518,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle("/project", func(m *tb.Message) {
-    err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "project0", 0).Err()
+    err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "project0", 0).Err()
     if err != nil {
       log.Print(err)
       b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -559,7 +559,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         return
       case "project0":
         projectname = m.Text
-        err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "project1", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "project1", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -569,7 +569,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         return
       case "project1":
         projectdesc = m.Text
-        err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "project2", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "project2", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -582,7 +582,7 @@ Swift Exchange - приватная биржа для доверенных ра�
           b.Send(m.Sender, "Ты ебанутый блять? Пиши цифры блять, ЦИФРЫ СУКА, ЗНАЕШЬ ТАМ 1,2,3,4,5,6,7,8,9,0? НЕТ? ДЕБИЛ БЛЯТЬ")
           return
         }
-        err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "project3", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "project3", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
@@ -599,7 +599,7 @@ Swift Exchange - приватная биржа для доверенных ра�
         tx.MustExec(`INSERT INTO SEproject(name, description, difficulty, price, paid, progress, worker_id) VALUES ($1, $2, $3, $4, 0, 0, 0)`, projectname, projectdesc, projectdiff, projectprice)
         tx.Commit()
         b.Send(m.Sender, "Поздравляю, долбаеб, все готово, проект теперь в списке, иди ищи плебсов, чтобы этого говно делали. Деньги мне плати блять")
-        err := client.Set(fmt.Sprintf("%s", m.Sender.ID), "start", 0).Err()
+        err := client.Set(fmt.Sprintf("%d", m.Sender.ID), "start", 0).Err()
         if err != nil {
           log.Print(err)
           b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
