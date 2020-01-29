@@ -484,6 +484,8 @@ Swift Exchange - приватная биржа для доверенных ра�
     fmt.Println(cut, "takeProject_")
     fmt.Println(strings.Compare(cut, cut))
     fmt.Println(strings.Compare("takeProject_", "takeProject_"))
+    fmt.Println(strings.Compare(cut, "takeProject_"))
+    fmt.Println(strings.Compare("takeProject_", cut))
     if strings.Compare(cut, "takeProject_") == 0 {
       project := SEproject{}
       db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
