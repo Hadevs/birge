@@ -91,7 +91,7 @@ func main() {
     projectdesc  = ""
     projectdiff  = 0
     projectprice = 0
-    takeProjectStr = "takeProject"
+    takeProjectStr = 1
 	)
 
   fmt.Println(psqlInfo)
@@ -466,7 +466,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     for _, project := range projects {
       inlineKeys := [][]tb.InlineButton{
         []tb.InlineButton{tb.InlineButton{
-          Unique: fmt.Sprintf("%s_%d", takeProjectStr, project.Id),
+          Unique: fmt.Sprintf("%d_%d", takeProjectStr, project.Id),
           Text:   "❇️ Принять проект"}}}
       b.Send(
         c.Sender,
@@ -482,8 +482,14 @@ Swift Exchange - приватная биржа для доверенных ра�
   b.Handle(tb.OnCallback, func(c *tb.Callback) {
     pid := c.Data[len(c.Data) - 1:]
     split := strings.Split(c.Data, "_")
-    cmd := split[0]
-    if strings.Compare(cmd, takeProjectStr) == 0 {
+    cmd, err := strconv.Atoi(split[0])
+    if err != nil {
+      b.Send(
+        c.Sender,
+        "https://www.youtube.com/watch?v=l60MnDJklnM")
+      return
+    }
+    if cmd == takeProjectStr {
       project := SEproject{}
       db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
       if project.WorkerId != 0 {
