@@ -64,6 +64,16 @@ func parsePsqlElements(url string) (string, string, string, string, string) {
   dbname := portdbname[1]
   return uname, pwd, link, port, dbname
 }
+// redis://h:pce2cf2e8633a6107d63b9e1aed57cd5a6590af92578cada0f451abc279b13bf7@ec2-18-203-184-0.eu-west-1.compute.amazonaws.com:6549
+func parseRedisElements(url string) (string, string, string) {
+  split := strings.Split(url, "@")
+  unamepwdsplit := strings.Split(split[0], "//")
+  unamepwd := strings.Split(unamepwdsplit[1], ":")
+  uname := unamepwd[0]
+  pwd := unamepwd[1]
+  link := split[1]
+  return uname, pwd, link
+}
 
 func main() {
 	var (
@@ -75,6 +85,7 @@ func main() {
     dbuname, dbpwd, dblink, dbport, dbname = parsePsqlElements(psqlURL)
     psqlInfo  = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s" +
     " sslmode=disable", dblink, dbport, dbuname, dbpwd, dbname)
+    _, repwd, relink = parseRedisElements(redisURL)
     // Cuz I'm too lazy to do it the right way
     projectname  = ""
     projectdesc  = ""
@@ -92,8 +103,8 @@ func main() {
   db.MustExec(schema)
 
   client := redis.NewClient(&redis.Options{
-		Addr:     redisURL,
-		Password: "", // no password set
+		Addr:     relink,
+		Password: repwd, // no password set
 		DB:       0,  // use default DB
 	})
   _, err = client.Ping().Result()
