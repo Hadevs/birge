@@ -251,7 +251,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{showOffersBtn}}
 
     user := SEworker{}
-    err := db.Get(&user, "SELECT * FROM SEworker WHERE tid=$1", c.Sender.ID)
+    err = db.Get(&user, "SELECT * FROM SEworker WHERE tid=$1", c.Sender.ID)
     if err != nil || user.Approved != true {
       b.Send(c.Sender, `Сначала надо пройти собеседование, для этого нажми на "🧧 Подать заявку"`)
       return
