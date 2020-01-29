@@ -482,6 +482,8 @@ Swift Exchange - приватная биржа для доверенных ра�
     pid := c.Data[len(c.Data) - 1:]
     cut := fmt.Sprintf("%s", c.Data[:len(c.Data) - 1])
     fmt.Println(cut, "takeProject_")
+    fmt.Println(strings.Compare(cut, cut))
+    fmt.Println(strings.Compare("takeProject_", "takeProject_"))
     if strings.Compare(cut, "takeProject_") == 0 {
       project := SEproject{}
       db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
