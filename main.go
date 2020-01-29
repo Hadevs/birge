@@ -98,6 +98,7 @@ func main() {
 	})
   _, err = client.Ping().Result()
   if err != nil {
+    fmt.Println(err)
     log.Panic(err)
   }
 
