@@ -483,7 +483,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     pid := c.Data[len(c.Data) - 1:]
     split := strings.Split(c.Data, "_")
     fmt.Println(split[0], split[1])
-    cmd, err := strconv.Atoi(split[0])
+    cmd, err := strconv.Atoi(string(split[0]))
     fmt.Println(cmd, err)
     if err != nil {
       b.Send(
