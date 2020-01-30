@@ -502,7 +502,7 @@ Swift Exchange - приватная биржа для доверенных ра�
       worker := SEworker{}
       db.Select(&worker, `SELECT * FROM SEworker WHERE tid = $1`, c.Sender.ID)
       tx := db.MustBegin()
-      tx.MustExec(`UPDATE SEprojects SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
+      tx.MustExec(`UPDATE public."SEprojects" SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
       tx.Commit()
       b.Send(
         c.Sender,
