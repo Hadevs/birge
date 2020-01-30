@@ -171,9 +171,9 @@ func main() {
     Unique: "redeemMilestoneProject",
     Text:   "✅ Закрыть этап/проект"}
 
-  // cancelProjectBtn := tb.InlineButton{
-  //   Unique: "cancelProject",
-  //   Text:   "❌ Отказаться от проекта"}
+  cancelProjectBtn := tb.InlineButton{
+    Unique: "cancelProject",
+    Text:   "❌ Отказаться от проекта"}
 
 	b, err := tb.NewBot(pref)
 	if err != nil {
@@ -247,7 +247,8 @@ Swift Exchange - приватная биржа для доверенных ра�
       return
     }
 
-    inlineKeys := [][]tb.InlineButton{[]tb.InlineButton{showOffersBtn}}
+    inlineKeysOff := [][]tb.InlineButton{[]tb.InlineButton{showOffersBtn}}
+    inlineKeysOn := [][]tb.InlineButton{[]tb.InlineButton{redeemMilestoneProjectBtn}, []tb.InlineButton{cancelProjectBtn}}
 
     user := SEworker{}
     err = db.Get(&user, "SELECT * FROM SEworker WHERE tid=$1", c.Sender.ID)
@@ -256,11 +257,20 @@ Swift Exchange - приватная биржа для доверенных ра�
       return
     }
     projects := []SEproject{}
+    cproject := SEproject{}
     db.Select(&projects, "SELECT * FROM SEproject WHERE worker_id = 0 ORDER BY id DESC")
-    b.Send(c.Sender, fmt.Sprintf(`🔑 Войти на биржу:
+    db.Get(&cproject, "SELECT * FROM SEproject WHERE worker_id = $1 ORDER BY id DESC", user.Id)
+    if cproject.WorkerId != user.Id {
+      b.Send(c.Sender, fmt.Sprintf(`🔑 Войти на биржу:
 
 Вы вошли на Swift Exchange. У вас сейчас %d открытых предложений по проектам.`, len(projects)),
-    &tb.ReplyMarkup{InlineKeyboard: inlineKeys})
+      &tb.ReplyMarkup{InlineKeyboard: inlineKeysOff})
+      return
+    }
+    b.Send(c.Sender, fmt.Sprintf(`🔑 Войти на биржу:
+
+Вы вошли на Swift Exchange. В данный момент вы уже выполняете проект "%s".`, cproject.Name),
+      &tb.ReplyMarkup{InlineKeyboard: inlineKeysOn})
   })
 
   b.Handle(&howToEnterBtn, func(c *tb.Callback) {
@@ -535,6 +545,16 @@ Swift Exchange - приватная биржа для доверенных ра�
     b.Send(m.Sender, "Ну че, хуила, новый проект нашел для плебеев? Ну заполняй блять, гандон. Деньги мне плати блять")
   })
 
+  b.Handle(&cancelProjectBtn, func(c *tb.Callback) {
+    err := client.Set(fmt.Sprintf("%d", c.Sender.ID), "cancel0", 0).Err()
+    if err != nil {
+      log.Print(err)
+      b.Send(c.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
+      return
+    }
+    b.Send(c.Sender, "Очень жаль, что вы вынуждены отказаться от проекта. Пожалуйста, в следующем сообщении опишите максимально подробно причину отказа, что уже удалось сделать и на каком этапе находится проект. Чем больше информации будет предоставлено вами, тем быстрее будет принято решение по разрешению данного тикета. Спасибо!")
+  })
+
   b.Handle(tb.OnText, func(m *tb.Message) {
     v, err := client.Get(fmt.Sprintf("%d", m.Sender.ID)).Result()
     if err != nil {
@@ -549,7 +569,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     admin := tb.User{73346375,"","","","",false}
     switch position {
       case "qualify0":
-        b.Send(&admin, fmt.Sprintf("%d", m.Sender.ID))
+        b.Send(&admin, fmt.Sprintf("%d – %s", m.Sender.ID, m.Sender.Username))
         b.Forward(&admin, m)
         b.Send(m.Sender, "Спасибо, администрация получила Вашу заявку и в самое ближайшее время свяжется с вами в Telegram! Вернитесь в меню с помощью /start")
         return
@@ -613,6 +633,11 @@ Swift Exchange - приватная биржа для доверенных ра�
           b.Send(m.Sender, "Произошла ошибка, администрация уже получила запрос и работает на решением. Пожалуйста, воспользуйтесь сервисом позже")
           return
         }
+        return
+      case "cancel0":
+        b.Send(&admin, fmt.Sprintf("Хуила %d – @%s отказывается от проекта. Крica или кидала - решать тебе, Даниил, будь рассудителен и забань мразоту нахуй.", m.Sender.ID, m.Sender.Username))
+        b.Forward(&admin, m)
+        b.Send(m.Sender, "Спасибо, администрация получила Вашу заявку и в самое ближайшее время свяжется с вами в Telegram! Вернитесь в меню с помощью /start")
         return
       default:
         b.Send(m.Sender, "Я не понимаю обычный текст, нажмите /start")
