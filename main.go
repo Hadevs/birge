@@ -482,7 +482,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   b.Handle(tb.OnCallback, func(c *tb.Callback) {
     split := strings.Split(c.Data, ":")
     pid := split[1]
-    cmd, err := strconv.Atoi(split[0])
+    cmd, err := strconv.Atoi(split[1])
     fmt.Println(pid, cmd)
     if err != nil {
       b.Send(
