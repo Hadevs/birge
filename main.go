@@ -501,7 +501,9 @@ Swift Exchange - приватная биржа для доверенных ра�
       }
       worker := SEworker{}
       db.Select(&worker, `SELECT * FROM SEworker WHERE tid = $1`, c.Sender.ID)
-      db.MustExec(`UPDATE SEproject SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
+      tx := db.MustBegin()
+      tx.MustExec(`UPDATE SEproject SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
+      tx.Commit()
       b.Send(
         c.Sender,
         "Этот проект ваш, скоро с вами свяжется администратор для уточнения деталей! Нажмите /start чтобы вернуться в меню")
