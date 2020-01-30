@@ -499,7 +499,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     }
     worker := SEworker{}
     db.Select(&worker, `SELECT * FROM SEworker WHERE tid = $1`, c.Sender.ID)
-    fmt.Println(woker.Id, pid, c.Sender.ID)
+    fmt.Println(worker.Id, pid, c.Sender.ID)
     tx := db.MustBegin()
     tx.MustExec(`UPDATE SEproject SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
     tx.Commit()
