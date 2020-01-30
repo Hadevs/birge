@@ -258,7 +258,7 @@ Swift Exchange - приватная биржа для доверенных ра�
       return
     }
     projects := []SEproject{}
-    db.Select(&projects, "SELECT * FROM SEproject ORDER BY id DESC")
+    db.Select(&projects, "SELECT * FROM SEproject WHERE worker_id = 0 ORDER BY id DESC")
     b.Send(c.Sender, fmt.Sprintf(`🔑 Войти на биржу:
 
 Вы вошли на Swift Exchange. У вас сейчас %d открытых предложений по проектам.`, len(projects)),
@@ -508,7 +508,7 @@ Swift Exchange - приватная биржа для доверенных ра�
       admin := tb.User{73346375,"","","","",false}
       b.Send(
         &admin,
-        fmt.Sprintf("Пользователь %s забрал проект, пиздуй рассказывай че там каво", c.Sender.Username))
+        fmt.Sprintf("Пользователь @%s забрал проект, пиздуй рассказывай че там каво", c.Sender.Username))
       return
     } else {
       b.Send(
