@@ -461,6 +461,10 @@ Swift Exchange - приватная биржа для доверенных ра�
   b.Handle(&showOffersBtn, func(c *tb.Callback) {
     projects := []SEproject{}
     db.Select(&projects, "SELECT * FROM SEproject WHERE worker_id = 0 ORDER BY id DESC")
+    if len(projects) < 1 {
+      b.Send(c.Sender, "К сожалению, в данный момент на бирже нет проектов. Проверяйте биржу каждый день и, возможно, следующий проект будет ваш!")
+      return
+    }
     for _, project := range projects {
       inlineKeys := [][]tb.InlineButton{
         []tb.InlineButton{tb.InlineButton{
