@@ -466,7 +466,7 @@ Swift Exchange - приватная биржа для доверенных ра�
     for _, project := range projects {
       inlineKeys := [][]tb.InlineButton{
         []tb.InlineButton{tb.InlineButton{
-          Unique: fmt.Sprintf("%d_%d", takeProjectStr, project.Id),
+          Unique: fmt.Sprintf("%d:%d", takeProjectStr, project.Id),
           Text:   "❇️ Принять проект"}}}
       b.Send(
         c.Sender,
@@ -480,7 +480,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle(tb.OnCallback, func(c *tb.Callback) {
-    split := strings.Split(c.Data, "_")
+    split := strings.Split(c.Data, ":")
     pid := split[1]
     cmd, err := strconv.Atoi(split[0])
     fmt.Println(pid, cmd)
