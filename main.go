@@ -483,40 +483,33 @@ Swift Exchange - приватная биржа для доверенных ра�
     split := strings.Split(c.Data, ":")
     pid := split[2]
     cmd, err := strconv.Atoi(split[1])
-    fmt.Println(pid, cmd)
-    if err != nil {
+    if err != nil || cmd != takeProjectStr {
       b.Send(
         c.Sender,
         "https://www.youtube.com/watch?v=l60MnDJklnM")
       return
     }
-    if cmd == takeProjectStr {
-      project := SEproject{}
-      db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
-      if project.WorkerId != 0 {
-        b.Send(
-          c.Sender,
-          "К сожалению, данный проект уже занят, выберите другой")
-        return
-      }
-      worker := SEworker{}
-      db.Select(&worker, `SELECT * FROM SEworker WHERE tid = $1`, c.Sender.ID)
-      tx := db.MustBegin()
-      tx.MustExec(`UPDATE SEproject SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
-      tx.Commit()
+    project := SEproject{}
+    db.Select(&project, `SELECT * FROM SEproject WHERE id = $1`, pid)
+    if project.WorkerId != 0 {
       b.Send(
         c.Sender,
-        "Этот проект ваш, скоро с вами свяжется администратор для уточнения деталей! Нажмите /start чтобы вернуться в меню")
-      admin := tb.User{73346375,"","","","",false}
-      b.Send(
-        &admin,
-        fmt.Sprintf("Пользователь @%s забрал проект, пиздуй рассказывай че там каво", c.Sender.Username))
+        "К сожалению, данный проект уже занят, выберите другой")
       return
-    } else {
-      b.Send(
-        c.Sender,
-        "https://www.youtube.com/watch?v=l60MnDJklnM")
     }
+    worker := SEworker{}
+    db.Select(&worker, `SELECT * FROM SEworker WHERE tid = $1`, c.Sender.ID)
+    fmt.Println(woker.Id, pid, c.Sender.ID)
+    tx := db.MustBegin()
+    tx.MustExec(`UPDATE SEproject SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
+    tx.Commit()
+    b.Send(
+      c.Sender,
+      "Этот проект ваш, скоро с вами свяжется администратор для уточнения деталей! Нажмите /start чтобы вернуться в меню")
+    admin := tb.User{73346375,"","","","",false}
+    b.Send(
+      &admin,
+      fmt.Sprintf("Пользователь @%s забрал проект, пиздуй рассказывай че там каво", c.Sender.Username))
     return
   })
 
