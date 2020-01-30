@@ -496,7 +496,7 @@ Swift Exchange - приватная биржа для доверенных ра�
       return
     }
     worker := SEworker{}
-    db.Get(&worker, `SELECT * FROM SEworker WHERE tid = "$1"`, c.Sender.ID)
+    db.Get(&worker, `SELECT * FROM SEworker WHERE tid = '$1'`, c.Sender.ID)
     fmt.Println(worker)
     db.MustExec(`UPDATE SEproject SET worker_id = $1 WHERE id = $2`, worker.Id, pid)
     b.Send(
@@ -510,7 +510,7 @@ Swift Exchange - приватная биржа для доверенных ра�
   })
 
   b.Handle("/approve", func(m *tb.Message) {
-    db.MustExec(`INSERT INTO SEworker(tid, approved) VALUES ("$1", true)`, m.Payload)
+    db.MustExec(`INSERT INTO SEworker(tid, approved) VALUES ('$1', true)`, m.Payload)
     b.Send(m.Sender, "Успешно добавлен новый пидераст, деньги мне плати блять")
   })
 
